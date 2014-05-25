@@ -1,0 +1,21 @@
+{
+  "name": "functional-generators",
+  "version": "0.0.0",
+  "description": "code to go along with my talk on functional programmming with generators",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --harmony"
+  },
+  "keywords": [
+    "generators",
+    "shen",
+    "slides"
+  ],
+  "author": "Peter de Croos <cultofmetatron>",
+  "license": "MIT",
+  "dependencies": {
+    "shen": "0.0.4",
+    "co": "~3.0.6",
+    "koa": "~0.6.1"
+  }
+}
