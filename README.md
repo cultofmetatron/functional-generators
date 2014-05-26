@@ -12,6 +12,9 @@ decks to go with my talk on programming with generators
 3. great for writing syncronous(looking) co-routines that are synchronous
 
 ##Slide 2
+###Preliminaries
+
+to Really understand what generators are good for, you need to understand the problems they are created to solve.
 
 ###The evolution of node concurrency
 
@@ -59,7 +62,6 @@ This can very quickly spiral out of control...
 
 ![mountain of woe](./images/mountainofwoe.png)
 
-(nuff said...)
 
 ##Slide 5
 
@@ -72,7 +74,8 @@ This can very quickly spiral out of control...
 ```
 var Promise = require('bluebird');
 //assuming A, B and C are now promise yielding functions
-return Promise.all([A(), B()]).spread(function(a, b) {
+Promise.all([A(), B()])
+.spread(function(a, b) {
   return C(a, b);
 })
 .then(function(c) {
@@ -87,6 +90,63 @@ return Promise.all([A(), B()]).spread(function(a, b) {
 ##Slide 6
 * much better!!
 * code scales to handle any number of asynchronous dependencies
-* 
+
+###Limitations
+
+* cannot access the result of an asynchronous computation within a stack frame. You can only extend the promise chain and get a new promise.
+* All async functions need to be written to return functions or be wrapped in in a promisfying functions 
+
+example: 
+```
+	var readFile = Promise.promisify(fs.readFile);
+```
+
+##Slide 7
+###Generators
+
+####Anatomy of a generator
+
+```
+var Gen = function *() { //notice the asterix
+  var val = yield 6; //yield keyword stops the function
+  return val  + 3;
+};
+	
+var gen = Gen(); //instantiate the generator
+var val = gen.next().value //val === 6
+console.log(gen.next(val).value) //prints 9
+
+```
+
+* Basicly a function with an internal state for tracking where it is in its execution
+* stops when it hits a yield keyword
+* can resume by calling its ```gen.next()``` method
+
+```next()``` return an object
+
+```
+{
+  value: [whatever was on the right side of the yield keyword],
+  done: [true if you can continue calling next() to increment the generator]
+}
+	
+```
+
+##Slide 8
+####Coroutines
+
+A coroutine is a stack of executing code that runs independently of the main thread. The closest analoge out there are ruby fibers and python coroutines.
+
+lets write a basic co routine, it only handles node style callbacks
+
+```
+//takes a generator and a callback function
+var co = 
+
+
+
+
+
+
 
  
