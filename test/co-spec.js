@@ -18,6 +18,18 @@ describe("co", function() {
   
   });
 
+  it('should error out on bad data', function(done) {
+    var fs = Promise.promisifyAll(require('fs'));
+    co(function *() {
+      console.log('running');
+      return yield fs.readFileAsync(path.join(__dirname, 'fo1.dat'), 'utf8');
+    })(function(err, value) {
+      err.message.should.equal("ENOENT, open '/Users/cultofmetatron/projects/functional-generators/test/fo1.dat'")
+      done();
+    });
+  
+  });
+
 
 
 
