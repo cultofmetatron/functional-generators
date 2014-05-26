@@ -36,14 +36,57 @@ fs.readFile('./somefile.dat', 'utf8', function(err, contents) {
 * Simple
 * Fast
 
-###Disadvantages
-* orchestrating multiple concurrent tasks becomes very hard
-* mountains of woe (pyramid of doom)
-
 ##Slide 4
+
+###Disadvantages
+#### Orchestrating multiple concurrent tasks becomes very hard
+	
+if for c = C(A(), B()), A and or B are asynchronous functions, how do you 
+make sure c is not run until both A and B resolve?
+
+```
+A(function(err, a) {
+  B(function(err, b) {
+  	C(a, b, function(c) {
+  	  //c is available here
+  	  console.log(c);
+  	});
+  });
+});
+
+```
+This can very quickly spiral out of control...
 
 ![mountain of woe](./images/mountainofwoe.png)
 
 (nuff said...)
+
+##Slide 5
+
+###Enter Promises
+
+* much more fine grained
+* functions immediatly return a "promise" that can be used to get the result of an asynchronous computation
+* thes promises can be chained together to make asynchronous control flows read synchronously
+
+```
+var Promise = require('bluebird');
+//assuming A, B and C are now promise yielding functions
+return Promise.all([A(), B()]).spread(function(a, b) {
+  return C(a, b);
+})
+.then(function(c) {
+  console.log(c);
+})
+.catch(function(err) {
+  console.log(err.message, err.stack);
+});
+
+```
+
+##Slide 6
+* much better!!
+* code scales to handle any number of asynchronous dependencies
+* 
 
  
