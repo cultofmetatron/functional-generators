@@ -289,14 +289,13 @@ app.use(function *(next) {
 ##Slide 14
 
 * I really liked the express method of middleware being a simple function
-* express middleware
 
 ```
 //standard get handler
 app.get(middleware, middleware2, function(req, res) { /* ... */ })
 
 ```
-* koa equivilant
+* how we'd do it in koa with join
 
 ```
 var middleware = function *(next) {
@@ -333,19 +332,19 @@ I needed some way of easily connecting smaller middleware generators to handlers
 
 ##Slide 16
 
-###Lets build a todo!!
-
-gotta scope it down
+###Lets build a todo
 * post a todo
 * get back a list of todos
 * delete a todo
 * mark a todo done
 
-###things we need
-* co-body
-* koa-route
-* koa-static
+###Things we need
+* [co-body: https://github.com/visionmedia/co-body](https://github.com/visionmedia/co-body)
+* [koa-route: https://github.com/koajs/route](https://github.com/koajs/route)
+* [koa-static: https://github.com/koajs/static](https://github.com/koajs/static)
 
+
+##Slide 17
 
 
 

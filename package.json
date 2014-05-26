@@ -18,7 +18,10 @@
     "co": "~3.0.6",
     "koa": "~0.6.1",
     "bluebird": "~1.2.4",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "co-body": "0.0.1",
+    "koa-static": "~1.4.5",
+    "koa-route": "~1.1.4"
   },
   "devDependencies": {
     "mocha": "^1.19.0",
