@@ -14,7 +14,7 @@ decks to go with my talk on programming with generators
 ##Slide 2
 ###Preliminaries
 
-to Really understand what generators are good for, you need to understand the problems they are created to solve.
+To Really understand what generators are good for, you need to understand the problems they are created to solve.
 
 ###The evolution of node concurrency
 
@@ -28,7 +28,7 @@ fs.readFile('./somefile.dat', 'utf8', function(err, contents) {
   	console.log(contents);
   }
   
-})
+});
 
 ```
 
@@ -119,6 +119,7 @@ console.log(gen.next(val).value) //prints 9
 ```
 
 * Basicly a function with an internal state for tracking where it is in its execution
+* Generators need to be initiated by calling it. You then call ```.next()``` on the instance.
 * stops when it hits a yield keyword
 * can resume by calling its ```gen.next()``` method
 
@@ -264,10 +265,86 @@ co(join(function*(next) {
 #### it gets.. complicated. 
 
 ##Slide 13
+###pivot - Koa in a nutshell
+
+* generators based control flow
+* Unlike express, generators have access to request response objects through ```this```. 
+* ```this.response```: wraps the node res 
+* ```this.request```:  wraps the node req
+
+```
+var koa = require('koa');
+var app = koa();
+app.use(function *(next) {
+  this.status = 200;
+  this.body = yield next;
+});
+
+app.use(function *(next) {
+  return "hello world";
+});
+
+```
+
+##Slide 14
+
+* I really liked the express method of middleware being a simple function
+* express middleware
+
+```
+//standard get handler
+app.get(middleware, middleware2, function(req, res) { /* ... */ })
+
+```
+* koa equivilant
+
+```
+var middleware = function *(next) {
+	this.status = 200;
+	yield next;
+};
+
+app.use(join(middleware, function *() {
+	this.body = "hello world";
+}));
+
+```
+
+I wanted to be able to do something similar in koa but use doesn't work. 
+I needed some way of easily connecting smaller middleware generators to handlers withough creating a whole nested koa container.
+
+##Slide 15
 
 ###Introducing Shen, a toolbox for composing generators
 
 [cultofmetatron/Shen](https://github.com/cultofmetatron/Shen)
+
+####Use case
+
+* Generator composition is complicated and you just want to roll a koa style control flow.
+* You're working in koa and you want to compose a generator from smaller reusable components before you drop into ```use```
+
+
+###API - Ones you'll use the most
+* cascade: like join but takes as many generators as you want!
+* branch/dispatch: conditionally yield to one of two generators
+* parallel: run two diffrent coroutines in parrallel
+
+
+##Slide 16
+
+###Lets build a todo!!
+
+gotta scope it down
+* post a todo
+* get back a list of todos
+* delete a todo
+* mark a todo done
+
+###things we need
+* co-body
+* koa-route
+* koa-static
 
 
 
