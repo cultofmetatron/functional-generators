@@ -26,8 +26,7 @@ var counter = (function() {
 
 var app = koa();
 
-authorizer = function(handler) {
-  return shen.dispatch(function *(paths) {
+var authorizer = shen.dispatch(function *(paths) {
     console.log(this.request.query.user)
     if (!_.isUndefined(users[this.request.query.user]) && (users[this.request.query.user] === this.request.query.password)) {
       return yield paths.pass;
@@ -35,7 +34,10 @@ authorizer = function(handler) {
       return yield paths.fail;
     }
   }, {
-    pass: handler,
+    pass: function *(next) {
+      console.log('successfully authorized');
+      yield next;
+    },
     fail: function *() {
       this.status = 400;
       this.body = JSON.stringify({
@@ -44,15 +46,11 @@ authorizer = function(handler) {
       return new Error('authentication error');
     }
   });
-};
-
-
-
 
 //serve up the public directory where we have all the assets
 app.use(staticServer(path.join(__dirname, 'public')));
 
-app.use(router.post('/todos', authorizer(function *() {
+app.use(router.post('/todos', shen.cascade(authorizer, function *() {
   /*
     yield lets us pass asynchronous functions that return promises or thunks
     It will freeze the middleware till its resolved and pass it back in.
@@ -67,7 +65,7 @@ app.use(router.get('/todos',  function *() {
   this.body = JSON.stringify(todos);
 }));
 
-app.use(router.delete('/todos/:id', authorizer(function *(id) {
+app.use(router.delete('/todos/:id', shen.cascade(authorizer, function *(id) {
   todos = _(todos).reject(function(todo) {
     console.log('what? ', todo, id );
     return todo.id === parseInt(id, 10);
