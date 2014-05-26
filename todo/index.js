@@ -10,7 +10,9 @@ var fs      = Promise.promisifyAll(require('fs'));
 
 var todos = [];
 
-users = {};
+users = {
+  'root':'rootpass'
+};
 
 //gets us unique ids
 var counter = (function() {
@@ -41,7 +43,7 @@ app.use(router.post('/todos', function *() {
 app.use(router.get('/todos', function *() {
   this.body = JSON.stringify(todos);
 }));
-
+4
 app.use(router.delete('/todos/:id', function *(id) {
   todos = _(todos).reject(function(todo) {
     console.log('what? ', todo, id );
@@ -50,8 +52,8 @@ app.use(router.delete('/todos/:id', function *(id) {
   this.body = JSON.stringify(todos.sort(function(a, b) { return a - b;}));
 }));
 
-app.listen(3000);
-console.log('listening on port 3000');
+app.listen(process.env.PORT || 3000);
+console.log('listening on port ' + (process.env.PORT || 3000));
 
 
 
