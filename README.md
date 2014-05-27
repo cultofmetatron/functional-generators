@@ -346,7 +346,14 @@ I needed some way of easily connecting smaller middleware generators to handlers
 
 ##Slide 17
 
-Code can be found at []()
+Code can be found at [https://github.com/cultofmetatron/functional-generators](https://github.com/cultofmetatron/functional-generators)
+
+first we initialize our koa app
+
+```
+
+
+```
 
 
 

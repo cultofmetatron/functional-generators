@@ -26,6 +26,8 @@ var counter = (function() {
 
 var app = koa();
 
+
+//authorizer is a Generator
 var authorizer = shen.dispatch(function *(paths) {
     console.log(this.request.query.user)
     if (!_.isUndefined(users[this.request.query.user]) && (users[this.request.query.user] === this.request.query.password)) {
